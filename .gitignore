@@ -1,0 +1,9 @@
+.vscode
+p2/rpc_sun/dir
+p2/rpc_sun/msg
+backup
+*.zip
+*.o
+entregable
+p2/rpc_sun/calculadora/calculadora_client
+p2/rpc_sun/calculadora/calculadora_server
