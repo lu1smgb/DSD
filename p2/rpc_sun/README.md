@@ -1,10 +1,8 @@
-# Llamada a procedimiento remoto (RPC)
+# RPC Sun
 
 Programación RPC de un cliente y un servidor usando `rpcgen` y del lenguaje C
 
 Calculadora capaz de soportar una pila de operaciones aritméticas básicas (suma, resta, multiplicación y división)
-
----
 
 ## Uso
 
