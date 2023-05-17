@@ -153,7 +153,6 @@ public class Replica implements IServidor, ICliente {
             this.donaciones.put(entidad, 0.0);
             System.out.println(
                 "Se ha añadido la entidad " + entidad + " a la replica " + this);
-            System.out.println(GetEntidades().toString());
         }
 
     }
@@ -267,12 +266,12 @@ public class Replica implements IServidor, ICliente {
             throw new Exception("Ha ocurrido un error inesperado");
 
         }
-
-        System.out.println(ret.GetHost() + ":" + ret.GetId());
+        
         return ret.GetId();
 
     }
 
+    // INTERFAZ CLIENTE SERVIDOR
     // Hace que una entidad done al conjunto de replicas una cantidad
     public void Donar(String entidad, double cantidad) throws Exception {
 
