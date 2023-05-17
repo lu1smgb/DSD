@@ -24,7 +24,7 @@ public class Servidor {
         try {
 
             // Verificamos el numero de replica
-            String host = "localhost";
+            String host = args[0];
             Integer num_replicas = Integer.parseInt(args[1]);
             if (num_replicas < 2 || args.length != 2) {
                 num_replicas = 2;
