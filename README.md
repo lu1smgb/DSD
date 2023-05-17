@@ -8,4 +8,4 @@ Prácticas de la asignatura. Curso 2022/2023. Universidad de Granada
     - **Sun Microsystems**. Orden `rpcgen` y lenguaje de programación C
     - **Apache Thrift**. Orden `thrift -gen`, multilenguaje (Python y C++)
  - **Práctica 3**. Invocación de método remoto (RMI). Java RMI
- - **Práctica 4**. Node.js
+ - **Práctica 4**. Servicio Web. Node.js, Socket.io y MongoDB.
