@@ -1,0 +1,64 @@
+* {
+    font-family: Impact, sans-serif;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+#body {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: start;
+    align-content: space-evenly;
+
+    padding: 8px;
+    
+    text-align: center;
+    border-radius: 2px;
+    border-style:groove;
+    grid-auto-columns: 33.3%;
+}
+
+.seccion {
+    justify-content: center;
+    box-shadow: 0px 0px 8px #121212;
+    margin: 8px;
+    padding: 8px;
+}
+
+#displaySensores {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.sensor {
+    display: flex;
+    flex-direction: row;
+    gap: 1ch;
+}
+
+#panelControl {
+    order: 2;
+    flex: 33%;
+}
+
+#notificaciones {
+    order: 3;
+    flex: 33%;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#usuarios {
+    order: 1;
+    flex: 33%;
+}
