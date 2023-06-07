@@ -62,3 +62,7 @@ ul {
     order: 1;
     flex: 33%;
 }
+
+#controlActuadores {
+    padding: 12px;
+}

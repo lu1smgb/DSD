@@ -6,12 +6,11 @@
     </head>
     <body>
         <h1>Sistema domótico</h1>
-        <h2>Panel de usuario</h2>
         <div id="body">
             <div class="seccion" id="panelControl">
                 <div id="displaySensores">
-                    <h3>Sensores</h3>
-                    <h4>Valores actuales</h4>
+                    <h2>Sensores</h2>
+                    <h3>Valores actuales</h3>
                     <div class="sensor">
                         <strong>Temperatura:</strong>
                         <div class="valor" id="temperaturaActual"> - </div>
@@ -22,7 +21,7 @@
                         <div class="valor" id="luminosidadActual"> - </div>
                         %
                     </div>
-                    <h4>Actualizar valores</h4>
+                    <h3>Actualizar valores</h3>
                     <div class="sensor">
                         <strong>Temperatura:</strong>
                         <input type="number" value="0" step="0.1" min="-30" max="60" class="valor" id="valorTemperatura">
@@ -35,9 +34,9 @@
                     </div>
                 </div>
                 <div id="controlActuadores">
-                    <h3>Actuadores</h3>
+                    <h2>Actuadores</h2>
                     <button class="botonActuador" id="botonAC" onclick="alternarAireAcondicionado()">Aire acondicionado</button>
-                    <button class="botonActuador" id="botonPersiana" onclick="alternarPersianas()">Persiana</button>
+                    <button class="botonActuador" id="botonPersiana" onclick="alternarPersianas()">Persianas</button>
                 </div>
             </div>
             <div class="seccion" id="notificaciones">
@@ -56,5 +55,5 @@
         Desarrollo de Sistemas Distribuidos - Luis Miguel Guirado Bautista - Curso 2022/23 - Universidad de Granada
     </body>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="common.js"></script>
+    <script src="cliente.js"></script>
 </html>
