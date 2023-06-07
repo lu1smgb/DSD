@@ -334,9 +334,9 @@ MongoClient.connect("mongodb://localhost:27017/", { useUnifiedTopology: true }, 
 
             }
 
-            // LISTENER para cuando se actualice la temperatura
-            client.on('actualizarTemperatura', (valor) => {
-                
+            // FUNCION que registra un nuevo valor de temperatura en el sistema
+            var actualizarTemperatura = (valor) => {
+
                 // Datos del registro que guardaremos en el sensor
                 var datosTemperatura = {
                     value: valor,
@@ -346,7 +346,7 @@ MongoClient.connect("mongodb://localhost:27017/", { useUnifiedTopology: true }, 
                 }
 
                 // Registramos los cambios
-                sensorTemperatura.insertOne(datosTemperatura, {safe: true}, (err) => {
+                sensorTemperatura.insertOne(datosTemperatura, { safe: true }, (err) => {
 
                     if (!err) {
 
@@ -387,9 +387,10 @@ MongoClient.connect("mongodb://localhost:27017/", { useUnifiedTopology: true }, 
 
                 });
 
-            });
+            };
 
-            client.on('actualizarLuminosidad', (valor) => {
+            // FUNCION que registra un nuevo valor de luminosidad en el sistema
+            var actualizarLuminosidad = (valor) => {
 
                 // Datos del registro que guardaremos en el sensor
                 var datosLuminosidad = {
@@ -400,7 +401,7 @@ MongoClient.connect("mongodb://localhost:27017/", { useUnifiedTopology: true }, 
                 }
 
                 // Registramos los cambios
-                sensorLuminosidad.insertOne(datosLuminosidad, {safe: true}, (err) => {
+                sensorLuminosidad.insertOne(datosLuminosidad, { safe: true }, (err) => {
 
                     if (!err) {
 
@@ -439,7 +440,12 @@ MongoClient.connect("mongodb://localhost:27017/", { useUnifiedTopology: true }, 
                     }
                 });
 
-            });
+            };
+
+            // LISTENER para cuando se actualice la temperatura
+            client.on('actualizarTemperatura', actualizarTemperatura);
+
+            client.on('actualizarLuminosidad', actualizarLuminosidad);
 
             // LISTENERS sencillos para el cambio manual del estado de los actuadores
             client.on('alternarAireAcondicionado', alternarAireAcondicionado);
