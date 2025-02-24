@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" href="estilos.css">
+        <title>Sistema domótico</title>
+    </head>
+    <body>
+        <h1>Sistema domótico</h1>
+        <div id="body">
+            <div class="seccion" id="panelControl">
+                <div id="displaySensores">
+                    <h2>Sensores</h2>
+                    <h3>Valores actuales</h3>
+                    <div class="sensor">
+                        <strong>Temperatura:</strong>
+                        <div class="valor" id="temperaturaActual"> - </div>
+                        ºC
+                    </div>
+                    <div class="sensor">
+                        <strong>Luminosidad:</strong>
+                        <div class="valor" id="luminosidadActual"> - </div>
+                        %
+                    </div>
+                    <h3>Actualizar valores</h3>
+                    <div class="sensor">
+                        <strong>Temperatura:</strong>
+                        <input type="number" value="0" step="0.1" min="-30" max="60" class="valor" id="valorTemperatura">
+                        <input type="button" onclick="actualizarTemperatura();" value="Actualizar">
+                    </div>
+                    <div class="sensor">
+                        <strong>Luminosidad:</strong>
+                        <input type="range" value="50" class="valor" id="valorLuminosidad">
+                        <input type="button" onclick="actualizarLuminosidad();" value="Actualizar">
+                    </div>
+                </div>
+                <div id="controlActuadores">
+                    <h2>Actuadores</h2>
+                    <button class="botonActuador" id="botonAC" onclick="alternarAireAcondicionado()">Aire acondicionado</button>
+                    <button class="botonActuador" id="botonPersiana" onclick="alternarPersianas()">Persianas</button>
+                </div>
+            </div>
+            <div class="seccion" id="notificaciones">
+                <h3>Notificaciones</h3>
+                <ul id="listaNotificaciones">
+                    <li>Cargando</li>
+                </ul>
+            </div>
+            <div class="seccion" id="usuarios">
+                <h3>Usuarios</h3>
+                <ul id="listaUsuarios">
+                    <li>Cargando</li>
+                </ul>
+            </div>
+        </div>
+        Desarrollo de Sistemas Distribuidos - Luis Miguel Guirado Bautista - Curso 2022/23 - Universidad de Granada
+    </body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="cliente.js"></script>
+</html>
