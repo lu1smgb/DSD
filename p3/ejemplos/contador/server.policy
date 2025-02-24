@@ -1,4 +1,0 @@
-// Política de seguridad del servidor
-grant codeBase "file:./" {
-    permission java.security.AllPermission;
-};

@@ -1,3 +1,0 @@
-# Servidor replicado
-
-> TO DO
