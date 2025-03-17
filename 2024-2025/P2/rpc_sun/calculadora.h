@@ -77,8 +77,8 @@ typedef struct OperacionCompuesta OperacionCompuesta;
 
 #if defined(__STDC__) || defined(__cplusplus)
 #define CALCULAR 1
-extern  ResultadoNumerico * calcular_1(Operacion , CLIENT *);
-extern  ResultadoNumerico * calcular_1_svc(Operacion , struct svc_req *);
+extern  ResultadoNumerico * calcular_1(Operacion *, CLIENT *);
+extern  ResultadoNumerico * calcular_1_svc(Operacion *, struct svc_req *);
 extern int calculadora_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
@@ -90,8 +90,8 @@ extern int calculadora_1_freeresult ();
 #define VECTORIAL 2
 
 #if defined(__STDC__) || defined(__cplusplus)
-extern  ResultadoVectorial * calcular_2(OperacionVectorial , CLIENT *);
-extern  ResultadoVectorial * calcular_2_svc(OperacionVectorial , struct svc_req *);
+extern  ResultadoVectorial * calcular_2(OperacionVectorial *, CLIENT *);
+extern  ResultadoVectorial * calcular_2_svc(OperacionVectorial *, struct svc_req *);
 extern int calculadora_2_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
@@ -102,8 +102,8 @@ extern int calculadora_2_freeresult ();
 #define COMPUESTA 3
 
 #if defined(__STDC__) || defined(__cplusplus)
-extern  ResultadoNumerico * calcular_3(OperacionCompuesta , CLIENT *);
-extern  ResultadoNumerico * calcular_3_svc(OperacionCompuesta , struct svc_req *);
+extern  ResultadoNumerico * calcular_3(OperacionCompuesta *, CLIENT *);
+extern  ResultadoNumerico * calcular_3_svc(OperacionCompuesta *, struct svc_req *);
 extern int calculadora_3_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */

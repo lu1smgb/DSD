@@ -10,13 +10,13 @@
 static struct timeval TIMEOUT = { 25, 0 };
 
 ResultadoNumerico *
-calcular_1(Operacion arg1,  CLIENT *clnt)
+calcular_1(Operacion *argp, CLIENT *clnt)
 {
 	static ResultadoNumerico clnt_res;
 
 	memset((char *)&clnt_res, 0, sizeof(clnt_res));
 	if (clnt_call (clnt, CALCULAR,
-		(xdrproc_t) xdr_Operacion, (caddr_t) &arg1,
+		(xdrproc_t) xdr_Operacion, (caddr_t) argp,
 		(xdrproc_t) xdr_ResultadoNumerico, (caddr_t) &clnt_res,
 		TIMEOUT) != RPC_SUCCESS) {
 		return (NULL);
@@ -25,13 +25,13 @@ calcular_1(Operacion arg1,  CLIENT *clnt)
 }
 
 ResultadoVectorial *
-calcular_2(OperacionVectorial arg1,  CLIENT *clnt)
+calcular_2(OperacionVectorial *argp, CLIENT *clnt)
 {
 	static ResultadoVectorial clnt_res;
 
 	memset((char *)&clnt_res, 0, sizeof(clnt_res));
 	if (clnt_call (clnt, CALCULAR,
-		(xdrproc_t) xdr_OperacionVectorial, (caddr_t) &arg1,
+		(xdrproc_t) xdr_OperacionVectorial, (caddr_t) argp,
 		(xdrproc_t) xdr_ResultadoVectorial, (caddr_t) &clnt_res,
 		TIMEOUT) != RPC_SUCCESS) {
 		return (NULL);
@@ -40,13 +40,13 @@ calcular_2(OperacionVectorial arg1,  CLIENT *clnt)
 }
 
 ResultadoNumerico *
-calcular_3(OperacionCompuesta arg1,  CLIENT *clnt)
+calcular_3(OperacionCompuesta *argp, CLIENT *clnt)
 {
 	static ResultadoNumerico clnt_res;
 
 	memset((char *)&clnt_res, 0, sizeof(clnt_res));
 	if (clnt_call (clnt, CALCULAR,
-		(xdrproc_t) xdr_OperacionCompuesta, (caddr_t) &arg1,
+		(xdrproc_t) xdr_OperacionCompuesta, (caddr_t) argp,
 		(xdrproc_t) xdr_ResultadoNumerico, (caddr_t) &clnt_res,
 		TIMEOUT) != RPC_SUCCESS) {
 		return (NULL);

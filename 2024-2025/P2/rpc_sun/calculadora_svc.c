@@ -16,24 +16,6 @@
 #define SIG_PF void(*)(int)
 #endif
 
-static ResultadoNumerico *
-_calcular_1 (Operacion  *argp, struct svc_req *rqstp)
-{
-	return (calcular_1_svc(*argp, rqstp));
-}
-
-static ResultadoVectorial *
-_calcular_2 (OperacionVectorial  *argp, struct svc_req *rqstp)
-{
-	return (calcular_2_svc(*argp, rqstp));
-}
-
-static ResultadoNumerico *
-_calcular_3 (OperacionCompuesta  *argp, struct svc_req *rqstp)
-{
-	return (calcular_3_svc(*argp, rqstp));
-}
-
 static void
 calculadora_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
@@ -52,7 +34,7 @@ calculadora_1(struct svc_req *rqstp, register SVCXPRT *transp)
 	case CALCULAR:
 		_xdr_argument = (xdrproc_t) xdr_Operacion;
 		_xdr_result = (xdrproc_t) xdr_ResultadoNumerico;
-		local = (char *(*)(char *, struct svc_req *)) _calcular_1;
+		local = (char *(*)(char *, struct svc_req *)) calcular_1_svc;
 		break;
 
 	default:
@@ -93,7 +75,7 @@ calculadora_2(struct svc_req *rqstp, register SVCXPRT *transp)
 	case CALCULAR:
 		_xdr_argument = (xdrproc_t) xdr_OperacionVectorial;
 		_xdr_result = (xdrproc_t) xdr_ResultadoVectorial;
-		local = (char *(*)(char *, struct svc_req *)) _calcular_2;
+		local = (char *(*)(char *, struct svc_req *)) calcular_2_svc;
 		break;
 
 	default:
@@ -134,7 +116,7 @@ calculadora_3(struct svc_req *rqstp, register SVCXPRT *transp)
 	case CALCULAR:
 		_xdr_argument = (xdrproc_t) xdr_OperacionCompuesta;
 		_xdr_result = (xdrproc_t) xdr_ResultadoNumerico;
-		local = (char *(*)(char *, struct svc_req *)) _calcular_3;
+		local = (char *(*)(char *, struct svc_req *)) calcular_3_svc;
 		break;
 
 	default:

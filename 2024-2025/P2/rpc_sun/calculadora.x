@@ -2,15 +2,12 @@
 
     Desarrollo de Sistemas Distribuidos
     Practica 2 - Llamada a procedimiento remoto - RPC Sun
-    Definicion de programa
-
-    - Operaciones sencillas
-    - Pila de operaciones
-    - Operaciones vectoriales
 
     Luis Miguel Guirado Bautista
     Curso 2024/2025
     Universidad de Granada
+
+	Representacion externa de datos
 
 */
 
