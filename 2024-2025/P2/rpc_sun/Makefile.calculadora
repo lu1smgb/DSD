@@ -1,15 +1,13 @@
-/*
-
-    Desarrollo de Sistemas Distribuidos
-    Practica 2 - Llamada a procedimiento remoto - RPC Sun
-
-    Luis Miguel Guirado Bautista
-    Curso 2024/2025
-    Universidad de Granada
-
-	Makefile (generado por rpcgen)
-
-*/
+#
+#   Desarrollo de Sistemas Distribuidos
+#   Practica 2 - Llamada a procedimiento remoto - RPC Sun
+#
+#   Luis Miguel Guirado Bautista
+#   Curso 2024/2025
+#   Universidad de Granada
+#
+#	Makefile (generado por rpcgen)
+#
 
 CLIENT = calculadora_client
 SERVER = calculadora_server
@@ -49,6 +47,6 @@ $(CLIENT) : $(OBJECTS_CLNT)
 $(SERVER) : $(OBJECTS_SVC) 
 	$(LINK.c) -o $(SERVER) $(OBJECTS_SVC) $(LDLIBS)
 
-clean:
-	$(RM) core $(TARGETS) $(OBJECTS_CLNT) $(OBJECTS_SVC) $(CLIENT) $(SERVER)
+ clean:
+	 $(RM) core $(TARGETS) $(OBJECTS_CLNT) $(OBJECTS_SVC) $(CLIENT) $(SERVER)
 

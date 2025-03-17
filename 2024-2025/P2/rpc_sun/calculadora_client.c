@@ -152,12 +152,10 @@ void calculadora_3(char *host, OperacionCompuesta op)
 
 void leerOperacionBasica(Operacion *op, int ayuda) {
 
-	printf("\n");
 	if (ayuda) {
-		printf("Escriba la operacion basica con la sintaxis: <operando1> <operador> <operando2>\n");
+		printf("\nEscriba la operacion basica con la sintaxis: <operando1> <operador> <operando2>\n");
 		printf("Los operandos pueden ser numeros enteros o decimales\n");
 		printf("Los operadores pueden ser los siguientes caracteres: +, -, * o /\n\n");
-		printf("Imprescindible separar los operadores y los operandos con espacios\n");
 	}
 	printf("Escriba aqui la expresion: ");
 	scanf("%lf %c %lf", &op->operando1, &op->operador, &op->operando2);
@@ -192,8 +190,8 @@ void leerOperacionVectorial(OperacionVectorial *op, int ayuda) {
 
 	// Valores del primer vector
 	if (ayuda) {
-		printf("Escribe los %d operandos del primer vector \n", dim);
-		printf("Los operandos pueden ser numeros enteros o decimales\n");
+		printf("\nEscribe los %d operandos del primer vector \n", dim);
+		printf("Los operandos pueden ser numeros enteros o decimales\n\n");
 	}
 	for (int i=0; i < dim; i++) {
 		while (1) {
@@ -210,9 +208,9 @@ void leerOperacionVectorial(OperacionVectorial *op, int ayuda) {
 
 	// Operador
 	if (ayuda) {
-		printf("Escribe el operador\n");
+		printf("\nEscribe el operador\n");
 		printf("Los operadores pueden ser los siguientes caracteres: +, - o *\n");
-		printf("En las operaciones vectoriales no se puede utilizar / como operador\n");
+		printf("En las operaciones vectoriales no se puede utilizar / como operador\n\n");
 	}
 	while (1) {
 		// Por algun motivo, al escribir el ultimo operando, el programa se salta el input del operador 1 vez
@@ -230,7 +228,7 @@ void leerOperacionVectorial(OperacionVectorial *op, int ayuda) {
 
 	// Valores del segundo vector
 	if (ayuda) {
-		printf("Escribe los %d operandos del segundo vector \n", dim);
+		printf("\nEscribe los %d operandos del segundo vector \n", dim);
 		printf("Los operandos pueden ser numeros enteros o decimales\n");
 	}
 	for (int i=0; i < dim; i++) {
@@ -258,13 +256,13 @@ void leerOperacionVectorial(OperacionVectorial *op, int ayuda) {
 void leerOperacionCompuesta(OperacionCompuesta *op, int ayuda) {
 
 	if (ayuda) {
-		printf("\nEscriba la operacion compuesta con la sintaxis:");
-		printf("\n\n<operando1> <operador1> <operando2> <operador2> <operando3> ... <operadorN> <operandoM>\n\n");
-		printf("Los operandos pueden ser numeros enteros o decimales\n");
+		printf("\nEscriba la operacion compuesta con la sintaxis:\n");
+		printf("\n<operando1> <operador1> <operando2> <operador2> <operando3> ... <operadorN> <operandoM>\n");
+		printf("\nLos operandos pueden ser numeros enteros o decimales\n");
 		printf("Los operadores pueden ser los siguientes caracteres: +, -, * o /\n");
-		printf("Imprescindible separar los operadores y los operandos con espacios\n");
+		printf("Imprescindible separar los operadores y los operandos con espacios en operaciones compuestas\n");
 		printf("Prioridad de los operandos en las operaciones compuestas (descendente): * -> / -> + y -\n");
-		printf("Los operadores a la izquierda tienen mas prioridad\n");
+		printf("Los operadores a la izquierda tienen mas prioridad\n\n");
 	}
 
 	char expresion[256];
@@ -324,7 +322,7 @@ void mostrarAyuda() {
 	printf("\n ------------------------------------ Ayuda ----------------------------------- \n");
 	printf("Los operandos pueden ser numeros enteros o decimales\n");
 	printf("Los operadores pueden ser los siguientes caracteres: +, -, * o /\n");
-	printf("Imprescindible separar los operadores y los operandos con espacios\n");
+	printf("Imprescindible separar los operadores y los operandos con espacios en operaciones compuestas\n");
 	printf("En las operaciones vectoriales no se puede utilizar / como operador\n");
 	printf("Prioridad de los operandos en las operaciones compuestas (descendente): * -> / -> + y -\n");
 	printf("Los operadores a la izquierda tienen mas prioridad\n");
