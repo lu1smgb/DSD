@@ -120,12 +120,114 @@ class Operacion(object):
 
     def __ne__(self, other):
         return not (self == other)
+
+
+class ColeccionCuatroNumeros(object):
+    """
+    Attributes:
+     - n1
+     - n2
+     - n3
+     - n4
+
+    """
+
+
+    def __init__(self, n1=None, n2=None, n3=None, n4=None,):
+        self.n1 = n1
+        self.n2 = n2
+        self.n3 = n3
+        self.n4 = n4
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.DOUBLE:
+                    self.n1 = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.DOUBLE:
+                    self.n2 = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.DOUBLE:
+                    self.n3 = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.DOUBLE:
+                    self.n4 = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('ColeccionCuatroNumeros')
+        if self.n1 is not None:
+            oprot.writeFieldBegin('n1', TType.DOUBLE, 1)
+            oprot.writeDouble(self.n1)
+            oprot.writeFieldEnd()
+        if self.n2 is not None:
+            oprot.writeFieldBegin('n2', TType.DOUBLE, 2)
+            oprot.writeDouble(self.n2)
+            oprot.writeFieldEnd()
+        if self.n3 is not None:
+            oprot.writeFieldBegin('n3', TType.DOUBLE, 3)
+            oprot.writeDouble(self.n3)
+            oprot.writeFieldEnd()
+        if self.n4 is not None:
+            oprot.writeFieldBegin('n4', TType.DOUBLE, 4)
+            oprot.writeDouble(self.n4)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        if self.n1 is None:
+            raise TProtocolException(message='Required field n1 is unset!')
+        if self.n2 is None:
+            raise TProtocolException(message='Required field n2 is unset!')
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
 all_structs.append(Operacion)
 Operacion.thrift_spec = (
     None,  # 0
     (1, TType.DOUBLE, 'operando1', None, None, ),  # 1
     (2, TType.I32, 'operador', None, None, ),  # 2
     (3, TType.DOUBLE, 'operando2', None, None, ),  # 3
+)
+all_structs.append(ColeccionCuatroNumeros)
+ColeccionCuatroNumeros.thrift_spec = (
+    None,  # 0
+    (1, TType.DOUBLE, 'n1', None, None, ),  # 1
+    (2, TType.DOUBLE, 'n2', None, None, ),  # 2
+    (3, TType.DOUBLE, 'n3', None, None, ),  # 3
+    (4, TType.DOUBLE, 'n4', None, None, ),  # 4
 )
 fix_spec(all_structs)
 del all_structs

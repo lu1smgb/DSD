@@ -25,7 +25,10 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('')
     print('Functions:')
     print('  void ping()')
-    print('  Numero calcular(Operacion op)')
+    print('  Numero calcularOperacion(Operacion op)')
+    print('  i64 calcularFactorial(i64 num)')
+    print('  i64 calcularMCD(ColeccionCuatroNumeros nums)')
+    print('  i64 calcularMCM(ColeccionCuatroNumeros nums)')
     print('')
     sys.exit(0)
 
@@ -111,11 +114,29 @@ if cmd == 'ping':
         sys.exit(1)
     pp.pprint(client.ping())
 
-elif cmd == 'calcular':
+elif cmd == 'calcularOperacion':
     if len(args) != 1:
-        print('calcular requires 1 args')
+        print('calcularOperacion requires 1 args')
         sys.exit(1)
-    pp.pprint(client.calcular(eval(args[0]),))
+    pp.pprint(client.calcularOperacion(eval(args[0]),))
+
+elif cmd == 'calcularFactorial':
+    if len(args) != 1:
+        print('calcularFactorial requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.calcularFactorial(eval(args[0]),))
+
+elif cmd == 'calcularMCD':
+    if len(args) != 1:
+        print('calcularMCD requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.calcularMCD(eval(args[0]),))
+
+elif cmd == 'calcularMCM':
+    if len(args) != 1:
+        print('calcularMCM requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.calcularMCM(eval(args[0]),))
 
 else:
     print('Unrecognized method %s' % cmd)
