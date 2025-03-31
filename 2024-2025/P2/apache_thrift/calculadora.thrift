@@ -1,5 +1,10 @@
 typedef double Numero;
 typedef TipoOperador Operador;
+typedef list<i64> ListaEnteros;
+
+typedef list<Numero> Numeros;
+typedef list<Operador> Operadores;
+typedef list<Numero> Vector;
 
 enum TipoOperador {
     SUMA = 1, 
@@ -14,18 +19,25 @@ struct Operacion {
     3: required Numero operando2;
 }
 
-struct ColeccionCuatroNumeros {
-    1: required Numero n1;
-    2: required Numero n2;
-    3: optional Numero n3;
-    4: optional Numero n4;
+struct OperacionCompuesta {
+    1: required Numeros operandos;
+    2: required Operadores operadores;
+}
+
+struct OperacionVectorial {
+    1: required Vector vector1;
+    2: required Operador operador;
+    3: required Vector vector2;
 }
 
 service Calculadora {
     void ping(),
     Numero calcularOperacion(1:Operacion op);
     i64 calcularFactorial(1:i64 num);
-    i64 calcularMCD(1:ColeccionCuatroNumeros nums);
-    i64 calcularMCM(1:ColeccionCuatroNumeros nums);
+    i64 calcularMCD(1:ListaEnteros nums);
+    i64 calcularMCM(1:ListaEnteros nums);
+    Numero calcularOperacionCompuesta(1:OperacionCompuesta op);
+    Vector calcularOperacionVectorial(1:OperacionVectorial op);
+    Vector vectorPorEscalar(1:Vector vector, 2:i64 escalar);
 }
 

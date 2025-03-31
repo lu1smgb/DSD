@@ -54,6 +54,31 @@ class Iface(object):
         """
         pass
 
+    def calcularOperacionCompuesta(self, op):
+        """
+        Parameters:
+         - op
+
+        """
+        pass
+
+    def calcularOperacionVectorial(self, op):
+        """
+        Parameters:
+         - op
+
+        """
+        pass
+
+    def vectorPorEscalar(self, vector, escalar):
+        """
+        Parameters:
+         - vector
+         - escalar
+
+        """
+        pass
+
 
 class Client(Iface):
     def __init__(self, iprot, oprot=None):
@@ -214,6 +239,104 @@ class Client(Iface):
             return result.success
         raise TApplicationException(TApplicationException.MISSING_RESULT, "calcularMCM failed: unknown result")
 
+    def calcularOperacionCompuesta(self, op):
+        """
+        Parameters:
+         - op
+
+        """
+        self.send_calcularOperacionCompuesta(op)
+        return self.recv_calcularOperacionCompuesta()
+
+    def send_calcularOperacionCompuesta(self, op):
+        self._oprot.writeMessageBegin('calcularOperacionCompuesta', TMessageType.CALL, self._seqid)
+        args = calcularOperacionCompuesta_args()
+        args.op = op
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_calcularOperacionCompuesta(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = calcularOperacionCompuesta_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "calcularOperacionCompuesta failed: unknown result")
+
+    def calcularOperacionVectorial(self, op):
+        """
+        Parameters:
+         - op
+
+        """
+        self.send_calcularOperacionVectorial(op)
+        return self.recv_calcularOperacionVectorial()
+
+    def send_calcularOperacionVectorial(self, op):
+        self._oprot.writeMessageBegin('calcularOperacionVectorial', TMessageType.CALL, self._seqid)
+        args = calcularOperacionVectorial_args()
+        args.op = op
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_calcularOperacionVectorial(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = calcularOperacionVectorial_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "calcularOperacionVectorial failed: unknown result")
+
+    def vectorPorEscalar(self, vector, escalar):
+        """
+        Parameters:
+         - vector
+         - escalar
+
+        """
+        self.send_vectorPorEscalar(vector, escalar)
+        return self.recv_vectorPorEscalar()
+
+    def send_vectorPorEscalar(self, vector, escalar):
+        self._oprot.writeMessageBegin('vectorPorEscalar', TMessageType.CALL, self._seqid)
+        args = vectorPorEscalar_args()
+        args.vector = vector
+        args.escalar = escalar
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_vectorPorEscalar(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = vectorPorEscalar_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "vectorPorEscalar failed: unknown result")
+
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
@@ -224,6 +347,9 @@ class Processor(Iface, TProcessor):
         self._processMap["calcularFactorial"] = Processor.process_calcularFactorial
         self._processMap["calcularMCD"] = Processor.process_calcularMCD
         self._processMap["calcularMCM"] = Processor.process_calcularMCM
+        self._processMap["calcularOperacionCompuesta"] = Processor.process_calcularOperacionCompuesta
+        self._processMap["calcularOperacionVectorial"] = Processor.process_calcularOperacionVectorial
+        self._processMap["vectorPorEscalar"] = Processor.process_vectorPorEscalar
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -357,6 +483,75 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
         oprot.writeMessageBegin("calcularMCM", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_calcularOperacionCompuesta(self, seqid, iprot, oprot):
+        args = calcularOperacionCompuesta_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = calcularOperacionCompuesta_result()
+        try:
+            result.success = self._handler.calcularOperacionCompuesta(args.op)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("calcularOperacionCompuesta", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_calcularOperacionVectorial(self, seqid, iprot, oprot):
+        args = calcularOperacionVectorial_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = calcularOperacionVectorial_result()
+        try:
+            result.success = self._handler.calcularOperacionVectorial(args.op)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("calcularOperacionVectorial", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_vectorPorEscalar(self, seqid, iprot, oprot):
+        args = vectorPorEscalar_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = vectorPorEscalar_result()
+        try:
+            result.success = self._handler.vectorPorEscalar(args.vector, args.escalar)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("vectorPorEscalar", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -718,9 +913,13 @@ class calcularMCD_args(object):
             if ftype == TType.STOP:
                 break
             if fid == 1:
-                if ftype == TType.STRUCT:
-                    self.nums = ColeccionCuatroNumeros()
-                    self.nums.read(iprot)
+                if ftype == TType.LIST:
+                    self.nums = []
+                    (_etype31, _size28) = iprot.readListBegin()
+                    for _i32 in range(_size28):
+                        _elem33 = iprot.readI64()
+                        self.nums.append(_elem33)
+                    iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
             else:
@@ -734,8 +933,11 @@ class calcularMCD_args(object):
             return
         oprot.writeStructBegin('calcularMCD_args')
         if self.nums is not None:
-            oprot.writeFieldBegin('nums', TType.STRUCT, 1)
-            self.nums.write(oprot)
+            oprot.writeFieldBegin('nums', TType.LIST, 1)
+            oprot.writeListBegin(TType.I64, len(self.nums))
+            for iter34 in self.nums:
+                oprot.writeI64(iter34)
+            oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -756,7 +958,7 @@ class calcularMCD_args(object):
 all_structs.append(calcularMCD_args)
 calcularMCD_args.thrift_spec = (
     None,  # 0
-    (1, TType.STRUCT, 'nums', [ColeccionCuatroNumeros, None], None, ),  # 1
+    (1, TType.LIST, 'nums', (TType.I64, None, False), None, ),  # 1
 )
 
 
@@ -842,9 +1044,13 @@ class calcularMCM_args(object):
             if ftype == TType.STOP:
                 break
             if fid == 1:
-                if ftype == TType.STRUCT:
-                    self.nums = ColeccionCuatroNumeros()
-                    self.nums.read(iprot)
+                if ftype == TType.LIST:
+                    self.nums = []
+                    (_etype38, _size35) = iprot.readListBegin()
+                    for _i39 in range(_size35):
+                        _elem40 = iprot.readI64()
+                        self.nums.append(_elem40)
+                    iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
             else:
@@ -858,8 +1064,11 @@ class calcularMCM_args(object):
             return
         oprot.writeStructBegin('calcularMCM_args')
         if self.nums is not None:
-            oprot.writeFieldBegin('nums', TType.STRUCT, 1)
-            self.nums.write(oprot)
+            oprot.writeFieldBegin('nums', TType.LIST, 1)
+            oprot.writeListBegin(TType.I64, len(self.nums))
+            for iter41 in self.nums:
+                oprot.writeI64(iter41)
+            oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -880,7 +1089,7 @@ class calcularMCM_args(object):
 all_structs.append(calcularMCM_args)
 calcularMCM_args.thrift_spec = (
     None,  # 0
-    (1, TType.STRUCT, 'nums', [ColeccionCuatroNumeros, None], None, ),  # 1
+    (1, TType.LIST, 'nums', (TType.I64, None, False), None, ),  # 1
 )
 
 
@@ -942,6 +1151,413 @@ class calcularMCM_result(object):
 all_structs.append(calcularMCM_result)
 calcularMCM_result.thrift_spec = (
     (0, TType.I64, 'success', None, None, ),  # 0
+)
+
+
+class calcularOperacionCompuesta_args(object):
+    """
+    Attributes:
+     - op
+
+    """
+
+
+    def __init__(self, op=None,):
+        self.op = op
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRUCT:
+                    self.op = OperacionCompuesta()
+                    self.op.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('calcularOperacionCompuesta_args')
+        if self.op is not None:
+            oprot.writeFieldBegin('op', TType.STRUCT, 1)
+            self.op.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(calcularOperacionCompuesta_args)
+calcularOperacionCompuesta_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRUCT, 'op', [OperacionCompuesta, None], None, ),  # 1
+)
+
+
+class calcularOperacionCompuesta_result(object):
+    """
+    Attributes:
+     - success
+
+    """
+
+
+    def __init__(self, success=None,):
+        self.success = success
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.DOUBLE:
+                    self.success = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('calcularOperacionCompuesta_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.DOUBLE, 0)
+            oprot.writeDouble(self.success)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(calcularOperacionCompuesta_result)
+calcularOperacionCompuesta_result.thrift_spec = (
+    (0, TType.DOUBLE, 'success', None, None, ),  # 0
+)
+
+
+class calcularOperacionVectorial_args(object):
+    """
+    Attributes:
+     - op
+
+    """
+
+
+    def __init__(self, op=None,):
+        self.op = op
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRUCT:
+                    self.op = OperacionVectorial()
+                    self.op.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('calcularOperacionVectorial_args')
+        if self.op is not None:
+            oprot.writeFieldBegin('op', TType.STRUCT, 1)
+            self.op.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(calcularOperacionVectorial_args)
+calcularOperacionVectorial_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRUCT, 'op', [OperacionVectorial, None], None, ),  # 1
+)
+
+
+class calcularOperacionVectorial_result(object):
+    """
+    Attributes:
+     - success
+
+    """
+
+
+    def __init__(self, success=None,):
+        self.success = success
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.LIST:
+                    self.success = []
+                    (_etype45, _size42) = iprot.readListBegin()
+                    for _i46 in range(_size42):
+                        _elem47 = iprot.readDouble()
+                        self.success.append(_elem47)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('calcularOperacionVectorial_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.LIST, 0)
+            oprot.writeListBegin(TType.DOUBLE, len(self.success))
+            for iter48 in self.success:
+                oprot.writeDouble(iter48)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(calcularOperacionVectorial_result)
+calcularOperacionVectorial_result.thrift_spec = (
+    (0, TType.LIST, 'success', (TType.DOUBLE, None, False), None, ),  # 0
+)
+
+
+class vectorPorEscalar_args(object):
+    """
+    Attributes:
+     - vector
+     - escalar
+
+    """
+
+
+    def __init__(self, vector=None, escalar=None,):
+        self.vector = vector
+        self.escalar = escalar
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.LIST:
+                    self.vector = []
+                    (_etype52, _size49) = iprot.readListBegin()
+                    for _i53 in range(_size49):
+                        _elem54 = iprot.readDouble()
+                        self.vector.append(_elem54)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I64:
+                    self.escalar = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('vectorPorEscalar_args')
+        if self.vector is not None:
+            oprot.writeFieldBegin('vector', TType.LIST, 1)
+            oprot.writeListBegin(TType.DOUBLE, len(self.vector))
+            for iter55 in self.vector:
+                oprot.writeDouble(iter55)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        if self.escalar is not None:
+            oprot.writeFieldBegin('escalar', TType.I64, 2)
+            oprot.writeI64(self.escalar)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(vectorPorEscalar_args)
+vectorPorEscalar_args.thrift_spec = (
+    None,  # 0
+    (1, TType.LIST, 'vector', (TType.DOUBLE, None, False), None, ),  # 1
+    (2, TType.I64, 'escalar', None, None, ),  # 2
+)
+
+
+class vectorPorEscalar_result(object):
+    """
+    Attributes:
+     - success
+
+    """
+
+
+    def __init__(self, success=None,):
+        self.success = success
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.LIST:
+                    self.success = []
+                    (_etype59, _size56) = iprot.readListBegin()
+                    for _i60 in range(_size56):
+                        _elem61 = iprot.readDouble()
+                        self.success.append(_elem61)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('vectorPorEscalar_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.LIST, 0)
+            oprot.writeListBegin(TType.DOUBLE, len(self.success))
+            for iter62 in self.success:
+                oprot.writeDouble(iter62)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(vectorPorEscalar_result)
+vectorPorEscalar_result.thrift_spec = (
+    (0, TType.LIST, 'success', (TType.DOUBLE, None, False), None, ),  # 0
 )
 fix_spec(all_structs)
 del all_structs
