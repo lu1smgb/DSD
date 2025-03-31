@@ -1,4 +1,11 @@
-import glob, sys
+# Desarrollo de Sistemas Distribuidos
+# Practica 2 - Llamada a procedimiento remoto - Apache Thrift
+
+# Luis Miguel Guirado Bautista
+# Curso 2024/2025
+# Universidad de Granada
+
+# Codigo del servidor
 
 from calculadora import Calculadora
 

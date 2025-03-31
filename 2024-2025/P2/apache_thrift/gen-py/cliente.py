@@ -1,3 +1,12 @@
+# Desarrollo de Sistemas Distribuidos
+# Practica 2 - Llamada a procedimiento remoto - Apache Thrift
+
+# Luis Miguel Guirado Bautista
+# Curso 2024/2025
+# Universidad de Granada
+
+# Codigo del cliente
+
 from calculadora import Calculadora
 
 from thrift import Thrift

@@ -1,3 +1,14 @@
+/**
+ * Desarrollo de Sistemas Distribuidos
+ * Practica 2 - Llamada a procedimiento remoto - Apache Thrift
+ *
+ * Luis Miguel Guirado Bautista
+ * Curso 2024-25
+ * Universidad de Granada
+ *
+ * Definicion de interfaz y tipos
+*/
+
 typedef double Numero;
 typedef TipoOperador Operador;
 typedef list<i64> ListaEnteros;
