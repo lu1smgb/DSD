@@ -1,10 +1,24 @@
+/*
+
+    Desarrollo de Sistemas Distribuidos
+    Practica 3 - RMI
+
+    Luis Miguel Guirado Bautista
+    Curso 2024/2025
+    Universidad de Granada
+
+	Clase Transaccion
+
+*/
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-public class Transaccion {
+public class Transaccion implements Serializable {
     
-    static private DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
+    static private DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
     static private int transactionCounter = 0;
     private int id;
     private String entidad;

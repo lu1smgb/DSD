@@ -1,3 +1,16 @@
+/*
+
+    Desarrollo de Sistemas Distribuidos
+    Practica 3 - RMI
+
+    Luis Miguel Guirado Bautista
+    Curso 2024/2025
+    Universidad de Granada
+
+	Codigo del cliente
+
+*/
+
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -6,6 +19,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Cliente {
 
@@ -14,7 +28,8 @@ public class Cliente {
         opciones.put(2, "Donar");
         opciones.put(3, "Obtener total donado");
         opciones.put(4, "Obtener lista de donantes");
-        opciones.put(5, "Salir");
+        opciones.put(5, "Obtener historial");
+        opciones.put(6, "Salir");
     }
 
     public static void imprimirOpciones(Map<Integer, String> opciones) {
@@ -42,7 +57,7 @@ public class Cliente {
 
             
             int opcion = -1;
-            while (opcion != 5) {
+            while (opcion != 6) {
                 imprimirOpciones(opciones);
                 System.out.print("Selecciona una opcion: ");
                 opcion = scanner.nextInt();
@@ -83,12 +98,25 @@ public class Cliente {
                         }
                         System.out.println("----- Lista de donantes -----");
                         donantes.entrySet().stream()
-                        .filter( e -> e.getValue() > 0 )
-                        .sorted( Comparator.comparing(Map.Entry<String, Integer>::getValue).reversed() )
-                        .forEach( e -> System.out.println(e.getKey() + " -> $" + e.getValue()) );
+                            .filter( e -> e.getValue() > 0 )
+                            .sorted( Comparator.comparing(Map.Entry<String, Integer>::getValue).reversed() )
+                            .forEach( e -> System.out.println(e.getKey() + " -> $" + e.getValue()) );
                         System.out.println("-----------------------------");
                         break;
                     case 5:
+                        Set<Transaccion> historial = servidor.obtenerHistorial(nombreEntidad);
+                        if (historial == null || historial.isEmpty()) {
+                            System.err.println("No se ha podido obtener el historial, registrese, haga una donacion o intentelo de nuevo");
+                            break;
+                        }
+                        System.out.println("----- Historial -----");
+                        historial.stream()
+                            .sorted(Comparator.comparing(Transaccion::getFecha))
+                            .forEach(System.out::println);
+                        System.out.println("---------------------");
+                        break;
+                    case 6:
+                        System.out.println("Adios! :)");
                         break;
                     default:
                         System.out.println("Opcion no valida");
@@ -100,15 +128,18 @@ public class Cliente {
         }
         catch (NotBoundException e) {
             System.err.println("No se ha podido localizar el servidor");
+            e.printStackTrace();
             System.exit(-1);
         }
         catch (RemoteException e) {
             System.err.println("No se ha podido conectar al conjunto de servidores");
+            e.printStackTrace();
             System.exit(-1);
         }
         catch (Exception e) {
             System.err.println("Exception: ");
             e.printStackTrace();
+            System.exit(-1);
         }
         System.exit(0);
     }

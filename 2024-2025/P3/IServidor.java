@@ -14,9 +14,11 @@
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Map;
+import java.util.Set;
 
 public interface IServidor extends Remote {
     public Map<String, Integer> obtenerRegistro() throws RemoteException;
+    public Set<Transaccion> obtenerTransacciones() throws RemoteException;
     public String obtenerId() throws RemoteException;
     public void grabarEntidad(String idCliente) throws RemoteException;
     public void grabarDeposito(String idCliente, int cantidad) throws Exception, RemoteException;

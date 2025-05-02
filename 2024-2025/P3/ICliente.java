@@ -14,10 +14,12 @@
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Map;
+import java.util.Set;
 
 public interface ICliente extends Remote {
     public boolean registrar(String idCliente) throws RemoteException;
     public boolean depositar(String idCliente, int cantidad) throws RemoteException;
     public Integer obtenerTotalDonado(String idCliente) throws RemoteException;
     public Map<String, Integer> obtenerDonantes(String idCliente) throws RemoteException;
+    public Set<Transaccion> obtenerHistorial(String idCliente) throws RemoteException;
 }

@@ -27,6 +27,7 @@ public class Servidor implements ICliente, IServidor, Runnable {
     String id;
     Set<IServidor> vecinos = new HashSet<>();
     Map<String, Integer> registro = new HashMap<>();
+    Set<Transaccion> transacciones = new HashSet<>();
 
     public Servidor(String id) {
         this.id = id;
@@ -37,20 +38,31 @@ public class Servidor implements ICliente, IServidor, Runnable {
         this.host = host;
     }
 
+    // Obtiene el identificador del servidor
     @Override
     public String obtenerId() throws RemoteException {
         return id;
     }
 
+    // Añade un servidor vecino al conjunto de vecinos de un servidor
     private void aniadirVecino(IServidor vecino) {
         vecinos.add(vecino);
     }
 
+    // Obtiene el registro de un servidor
     @Override
     public Map<String, Integer> obtenerRegistro() throws RemoteException {
         return registro;
     }
 
+    // Obtiene el conjunto local de transacciones de un servidor
+    @Override
+    public Set<Transaccion> obtenerTransacciones() throws RemoteException {
+        return transacciones;
+    }
+
+    // Genera un mapa como clave el servidor y como valor la longitud del registro, 
+    // o lo que es igual, el número de entidades registradas
     private Map<IServidor, Integer> obtenerLongitudesRegistros() throws RemoteException {
         Map<IServidor, Integer> longitudesRegistros = new HashMap<>();
         longitudesRegistros.put(this, this.registro.size());
@@ -60,12 +72,15 @@ public class Servidor implements ICliente, IServidor, Runnable {
         return longitudesRegistros;
     }
 
+    // Estima el mejor servidor donde realizar el registro de una entidad, 
+    // es decir, devuelve el servidor con menos entidades registradas
     private IServidor estimarMejorServidor() throws Exception {
         return obtenerLongitudesRegistros().entrySet()
                 .stream().min(Comparator.comparing(Map.Entry::getValue))
                 .map(Map.Entry::getKey).get();
     }
 
+    // Genera un registro global a partir de los registros de cada uno de los servidores
     private Map<String, Integer> obtenerRegistroGlobal() throws RemoteException {
         Map<String, Integer> resultado = new HashMap<>();
         resultado.putAll(this.obtenerRegistro());
@@ -74,17 +89,20 @@ public class Servidor implements ICliente, IServidor, Runnable {
         return resultado;
     }
 
+    // Registra la entidad con nombre idCliente en el servidor
     @Override
     public void grabarEntidad(String idCliente) throws RemoteException {
         System.out.println("Registrada entidad '" + idCliente + "' en '" + this.obtenerId() + "'");
         this.registro.putIfAbsent(idCliente, 0);
     }
 
+    // Comprueba si una entidad ha realizado una donacion en el sistema
     private boolean haDonado(String idCliente) throws RemoteException {
         Integer cantidad = obtenerDonadoPorEntidad(idCliente);
         return cantidad != null && cantidad > 0;
     }
 
+    // Intenta localizar una entidad en el conjunto de servidores y devuelve el servidor en el que se encuentra o null en caso contrario
     private IServidor localizarEntidad(String idCliente) throws RemoteException {
         IServidor resultado = null;
         if (this.registro.keySet().contains(idCliente))
@@ -102,19 +120,25 @@ public class Servidor implements ICliente, IServidor, Runnable {
         return resultado;
     }
 
+    // Registra una donacion en el servidor junto con su correspondiente transaccion
     @Override
     public void grabarDeposito(String idCliente, int cantidad) throws Exception, RemoteException {
         if (!this.registro.containsKey(idCliente))
             throw new Exception("La entidad '" + idCliente + "' no se encuentra registrada en '" + id + "'");
         int valorActualizado = this.registro.get(idCliente) + cantidad;
         this.registro.put(idCliente, valorActualizado);
+        Transaccion transaccion = new Transaccion(idCliente, cantidad);
+        this.transacciones.add(transaccion);
         System.out.println("Deposito de " + cantidad + " por entidad '" + idCliente + "' en '" + this.obtenerId() + "'");
     }
 
+    // Obtiene la cantidad total que ha donado una entidad
     private Integer obtenerDonadoPorEntidad(String idCliente) throws RemoteException {
         return localizarEntidad(idCliente).obtenerRegistro().get(idCliente);
     }
 
+    // Realiza el registro de una entidad en el sistema
+    @Override
     public synchronized boolean registrar(String idCliente) throws RemoteException {
         // El cliente solicita el registro a una de las replicas a las que se dirija
         // El servidor realiza el registro del cliente en coordinacion con el resto de servidores
@@ -141,6 +165,8 @@ public class Servidor implements ICliente, IServidor, Runnable {
         return estado;
     }
 
+    // Realiza el depósito especificado en cantidad como idCliente
+    @Override
     public synchronized boolean depositar(String idCliente, int cantidad) throws RemoteException {
         // El cliente solicita la donacion a una de las replicas a las que se dirija
         // El servidor recibe la solicitud
@@ -171,6 +197,8 @@ public class Servidor implements ICliente, IServidor, Runnable {
         return estado;
     }
 
+    // Obtiene el total donado por todas las entidades de todo el sistema
+    @Override
     public Integer obtenerTotalDonado(String idCliente) throws RemoteException {
         // El cliente solicita obtener el dato
         // El servidor comprueba que este registrado y que ha realizado un deposito
@@ -184,6 +212,8 @@ public class Servidor implements ICliente, IServidor, Runnable {
         return obtenerRegistroGlobal().values().stream().mapToInt(x->x).sum();
     }
 
+    // Obtiene la lista de donantes de todo el sistema, junto con las cantidades totales que ha donado cada entidad
+    @Override
     public Map<String, Integer> obtenerDonantes(String idCliente) throws RemoteException {
         // El cliente solicita obtener el dato
         // El servidor comprueba que este registrado y que ha realizado un deposito
@@ -197,6 +227,18 @@ public class Servidor implements ICliente, IServidor, Runnable {
         return obtenerRegistroGlobal();
     }
 
+    // Obtiene el historial de transacciones de la entidad idCliente
+    @Override
+    public Set<Transaccion> obtenerHistorial(String idCliente) throws RemoteException {
+        if (!haDonado(idCliente)) {
+            System.out.println("La entidad '" + idCliente + 
+                                "' ha intentado obtener el historial sin donar");
+            return null;
+        }
+        return localizarEntidad(idCliente).obtenerTransacciones();
+    }
+
+    // Funcion encargada de iniciar una replica
     public void run() {
         System.out.println("Iniciando " + id);
         if (System.getSecurityManager() == null) {
