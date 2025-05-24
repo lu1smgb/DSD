@@ -1,0 +1,73 @@
+html {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+body {
+    background-color: azure;
+}
+
+#secciones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 50% 50%;
+    gap: 20px;
+    width: 80vw;
+    margin: 0 auto;
+}
+
+.seccion {
+    text-align: center;
+    background-color: aliceblue;
+    padding: 8px;
+    border-style: ridge;
+    border-radius: 4px;
+}
+
+.seccion > h2 {
+    margin: 4px;
+}
+
+.seccion > ul {
+    display: inline-block;
+    text-align: left;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#actualizadores {
+    text-align: center;
+}
+
+.actualizador {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 25% 65% 10%;
+}
+
+.actualizador > .vista-previa-actualizador {
+    text-align: center;
+}
+
+.actualizador > .slider {
+    height: 25px;
+}
+
+#bloque-actuadores {
+    display: grid;
+    height: 60px;
+    grid-auto-flow: column;
+    justify-content: center;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+}
+
+.actuador {
+    background-color: lightgray;
+    width: 100%;
+    height: 100%;
+}
