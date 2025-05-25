@@ -17,12 +17,13 @@
     </head>
     <body>
         <h1>Sistema domotico</h1>
+        <div id="mensaje-error"><b>Error</b></div>
         <div id="secciones">
             <div class="seccion" id="sensores">
                 <h2>Sensores</h2>
                 <div id="actualizadores">
                     <div class="actualizador">
-                        <b>Temperatura</b>
+                        <b>🌡️ Temperatura</b>
                         <datalist id="marcas-temperatura">
                             <option value="-10" label="-10"></option>
                             <option value="0" label="0"></option>
@@ -36,7 +37,7 @@
                         <output class="vista-previa-actualizador" id="vista-previa-temperatura">???</output>
                     </div>
                     <div class="actualizador">
-                        <b>Luminosidad</b>
+                        <b>🔅 Luminosidad</b>
                         <datalist id="marcas-luminosidad">
                             <option value="0" label="0"></option>
                             <option value="25" label="25"></option>
@@ -47,14 +48,25 @@
                         <input type="range" min="0" max="100" value="50" step="0.1" list="marcas-luminosidad" class="slider" id="actualizador-luminosidad">
                         <output class="vista-previa-actualizador" id="vista-previa-luminosidad">???</output>
                     </div>
+                    <div class="actualizador">
+                        <b>🐝 Polen</b>
+                        <datalist id="marcas-polen">
+                            <option value="0" label="0"></option>
+                            <option value="100" label="100"></option>
+                            <option value="200" label="200"></option>
+                            <option value="300" label="300"></option>
+                        </datalist>
+                        <input type="range" min="0" max="300" value="50" step="1" list="marcas-polen" class="slider" id="actualizador-polen">
+                        <output class="vista-previa-actualizador" id="vista-previa-polen">???</output>
+                    </div>
                 </div>
             </div>
             <div class="seccion" id="actuadores">
                 <h2>Actuadores</h2>
                 <div id="bloque-actuadores">
-                    <button class="actuador" id="actuador-aire"><b>Aire acondicionado</b></button>
-                    <button class="actuador" id="actuador-persianas"><b>Persianas</b></button>
-                    <button class="actuador" id="actuador-a"><b>Purificador</b></button>
+                    <button class="actuador" id="actuador-aire"><b>💨 Aire acondicionado</b></button>
+                    <button class="actuador" id="actuador-persianas"><b>🪟 Persianas</b></button>
+                    <button class="actuador" id="actuador-purificador"><b>⚗️ Purificador</b></button>
                 </div>
             </div>
             <div class="seccion" id="notificaciones">

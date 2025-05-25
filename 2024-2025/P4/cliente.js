@@ -1,15 +1,35 @@
+/*     
+    Practica 4 - Servicio Web
+    JS del cliente
+
+    Desarrollo de Sistemas Distribuidos
+    Curso 2024/2025
+    Luis Miguel Guirado Bautista
+    Universidad de Granada 
+*/
+
 const serviceURL = document.URL;
 const socket = io(serviceURL);
 
 const seccionSensores = document.querySelector('#sensores');
+
 const actualizadorTemperatura = document.querySelector('#actualizador-temperatura');
 const vistaPreviaTemperatura = document.querySelector('#vista-previa-temperatura');
+
 const actualizadorLuminosidad = document.querySelector('#actualizador-luminosidad');
 const vistaPreviaLuminosidad = document.querySelector('#vista-previa-luminosidad');
+
+const actualizadorPolen = document.querySelector('#actualizador-polen');
+const vistaPreviaPolen = document.querySelector('#vista-previa-polen');
+
 const actuadorAire = document.querySelector('#actuador-aire');
 const actuadorPersianas = document.querySelector('#actuador-persianas');
+const actuadorPurificador = document.querySelector('#actuador-purificador');
+
 const listaNotificaciones = document.querySelector('#lista-notificaciones');
 const listaUsuarios = document.querySelector('#lista-usuarios');
+
+const error = document.querySelector('#mensaje-error');
 
 function cambiarTemperatura(valor) {
     console.log("Cambiando temperatura a " + valor + " ºC");
@@ -21,14 +41,24 @@ function cambiarLuminosidad(valor) {
     socket.emit('actualizar-luminosidad', valor);
 }
 
+function cambiarPolen(valor) {
+    console.log("Cambiando polen a " + valor + " gm3");
+    socket.emit('actualizar-polen', valor);
+}
+
 function alternarAire() {
-    console.log("Activando/desactivando aire");
+    console.log("Alternando aire");
     socket.emit('alternar-aire');
 }
 
 function alternarPersianas() {
     console.log("Alternando persianas");
     socket.emit('alternar-persianas');
+}
+
+function alternarPurificador() {
+    console.log("Alternando purificador");
+    socket.emit('alternar-purificador');
 }
 
 function actualizarTemperatura(valor) {
@@ -47,27 +77,32 @@ function actualizarLuminosidad(valor) {
 
 }
 
-function estadoAireToString(estado) {
-    return (estado ? "Encendido" : "Apagado");
-}; 
+function actualizarPolen(valor) {
 
-function estadoPersianasToString(estado) {
-    return (estado ? "Cerradas" : "Abiertas");
-}; 
+    console.log(`Actualizando polen ${valor} gm3`);
+    actualizadorPolen.value = valor;
+    vistaPreviaPolen.textContent = valor + ' gm3';
+
+}
 
 function actualizarAire(valor) {
 
-    var estado = estadoAireToString(valor);
-    console.log(`Actualizando aire a ${valor}`);
+    console.log(`Actualizando aire a ${valor ? "Encendido" : "Apagado"}`);
     actuadorAire.style.backgroundColor = valor ? 'greenyellow' : 'tomato';
 
 }
 
 function actualizarPersianas(valor) {
 
-    var estado = estadoPersianasToString(valor);
-    console.log(`Actualizando persianas a ${valor}`);
+    console.log(`Actualizando persianas a ${valor ? "Cerradas" : "Abiertas"}`);
     actuadorPersianas.style.backgroundColor = valor ? 'greenyellow' : 'tomato';
+
+}
+
+function actualizarPurificador(valor) {
+
+    console.log(`Actualizando purificador a ${valor ? "Activado" : "Desactivado"}`);
+    actuadorPurificador.style.backgroundColor = valor ? 'greenyellow' : 'tomato';
 
 }
 
@@ -102,20 +137,8 @@ function actualizarNotificaciones(notificaciones) {
 
 function mostrarErrorCritico(mensaje) {
     
-    var error = document.createElement('div');
-    error.className = 'mensaje-error';
-    error.textContent = mensaje;
-    error.style.textAlign = "center";
-    error.style.color = "#f00";
-    error.style.textDecoration = "bold";
-
-    var body = document.querySelector('#estado');
-    body.innerHTML = "";
-    body.appendChild(error);
-
-    seccionSensores.style.visibility = "hidden";
-    document.querySelector('#notificaciones').style.visibility = "hidden";
-    document.querySelector('#usuarios').style.visibility = "hidden";
+    error.childNodes.item(0).textContent = mensaje;
+    error.style.display = 'block';
 
 }
 
@@ -137,13 +160,25 @@ actualizadorLuminosidad.addEventListener("input", () => {
     vistaPreviaLuminosidad.textContent = valor + ' %';
 });
 
+actualizadorPolen.addEventListener("click", () => {
+    var valor = parseFloat(actualizadorPolen.value);
+    cambiarPolen(valor);
+});
+actualizadorPolen.addEventListener("input", () => {
+    var valor = parseFloat(actualizadorPolen.value);
+    vistaPreviaPolen.textContent = valor + ' gm3';
+});
+
 actuadorAire.addEventListener('click', alternarAire);
 actuadorPersianas.addEventListener('click', alternarPersianas);
+actuadorPurificador.addEventListener('click', alternarPurificador);
 
 socket.on('obtener-usuarios', actualizarListaUsuarios);
 socket.on('obtener-notificaciones', actualizarNotificaciones);
 socket.on('obtener-temperatura', actualizarTemperatura);
 socket.on('obtener-luminosidad', actualizarLuminosidad);
+socket.on('obtener-polen', actualizarPolen);
 socket.on('obtener-aire', actualizarAire);
 socket.on('obtener-persianas', actualizarPersianas);
+socket.on('obtener-purificador', actualizarPurificador);
 socket.on('disconnect', () => mostrarErrorCritico('Se ha perdido la conexion con el servidor'));

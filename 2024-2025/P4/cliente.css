@@ -1,13 +1,35 @@
+/*     
+    Practica 4 - Servicio Web
+    CSS del cliente
+
+    Desarrollo de Sistemas Distribuidos
+    Curso 2024/2025
+    Luis Miguel Guirado Bautista
+    Universidad de Granada 
+*/
+
 html {
     font-family: Arial, Helvetica, sans-serif;
 }
 
 h1 {
     text-align: center;
+    color: azure;
+    text-transform: uppercase;
 }
 
 body {
-    background-color: azure;
+    background-color: lightslategray;
+}
+
+#mensaje-error {
+    display: none;
+    text-align: center;
+}
+
+#mensaje-error > b {
+    color: tomato;
+    text-align: center;
 }
 
 #secciones {
@@ -24,7 +46,7 @@ body {
     background-color: aliceblue;
     padding: 8px;
     border-style: ridge;
-    border-radius: 4px;
+    border-radius: 5%;
 }
 
 .seccion > h2 {

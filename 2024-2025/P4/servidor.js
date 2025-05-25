@@ -1,3 +1,13 @@
+/*     
+    Practica 4 - Servicio Web
+    Codigo del servicio web
+
+    Desarrollo de Sistemas Distribuidos
+    Curso 2024/2025
+    Luis Miguel Guirado Bautista
+    Universidad de Granada 
+*/
+
 import http from 'node:http';
 import { join } from 'node:path';
 import { readFile } from 'node:fs';
@@ -41,18 +51,35 @@ MongoClient.connect(process.env.MONGODB_SERVER).then((mongoClient) => {
     const notificaciones = db.collection('Notificaciones');
     const sensores = {
         temperatura: db.collection('Temperatura'),
-        luminosidad: db.collection('Luminosidad')
+        luminosidad: db.collection('Luminosidad'),
+        polen: db.collection('Polen')
     };
     const actuadores = {
         aire: db.collection('AireAcondicionado'),
-        persianas: db.collection('Persianas')
+        persianas: db.collection('Persianas'),
+        purificador: db.collection('Purificador')
     };
     const limites = {
+        temperatura: {
+            min: -10,
+            max: 50
+        },
+        luminosidad: {
+            min: 0,
+            max: 100
+        },
+        polen: {
+            min: 0,
+            max: 300
+        }
+    };
+    const umbrales = {
         temperatura: {
             min: 15,
             max: 30
         },
-        luminosidad: 50
+        luminosidad: 50,
+        polen: 150
     };
 
     const mostrarError = (msg = "Error", err) => console.error(`${msg}:\n${err}`); 
@@ -70,8 +97,10 @@ MongoClient.connect(process.env.MONGODB_SERVER).then((mongoClient) => {
                 const datos = [
                     { nombre: "Temperatura", valor: 20.0 },
                     { nombre: "Luminosidad", valor: 50.0 },
+                    { nombre: "Polen", valor: 10.0 },
                     { nombre: "AireAcondicionado", valor: false },
-                    { nombre: "Persianas", valor: false }
+                    { nombre: "Persianas", valor: false },
+                    { nombre: "Purificador", valor: false }
                 ];
                 await estadosIniciales.insertMany(datos);
                 console.log('Estados iniciales establecidos en la base de datos');
@@ -134,9 +163,21 @@ MongoClient.connect(process.env.MONGODB_SERVER).then((mongoClient) => {
     }
     const actualizarTemperatura = (manejador) => actualizarSensor(sensores.temperatura, 'obtener-temperatura', manejador);
     const actualizarLuminosidad = (manejador) => actualizarSensor(sensores.luminosidad, 'obtener-luminosidad', manejador);
+    const actualizarPolen = (manejador) => actualizarSensor(sensores.polen, 'obtener-polen', manejador);
     const actualizarAire = (manejador) => actualizarSensor(actuadores.aire, 'obtener-aire', manejador);
     const actualizarPersianas = (manejador) => actualizarSensor(actuadores.persianas, 'obtener-persianas', manejador);
-    const actualizarSensores = (manejador) => [actualizarTemperatura, actualizarLuminosidad, actualizarAire, actualizarPersianas].forEach((func) => func(manejador));
+    const actualizarPurificador = (manejador) => actualizarSensor(actuadores.purificador, 'obtener-purificador', manejador);
+    const actualizarSensores = (manejador) => {
+        const actualizadores = [
+            actualizarTemperatura, 
+            actualizarLuminosidad,
+            actualizarPolen,
+            actualizarAire, 
+            actualizarPersianas,
+            actualizarPurificador
+        ];
+        actualizadores.forEach(act => act(manejador));
+    }
 
     const registrarConexion = (datosUsuario) => {
         usuarios.insertOne(datosUsuario, {safe: true})
@@ -156,35 +197,22 @@ MongoClient.connect(process.env.MONGODB_SERVER).then((mongoClient) => {
             .catch(err => mostrarError('Error al obtener los usuarios para todos', err));
     }
 
-    const alternarAire = () => {
-        estadoMasReciente(actuadores.aire)
-            .then(query => {
-                const estado = query.estado || false;
-                var registro = {
-                    fecha: new Date(),
-                    estado: !estado
-                }
-                actuadores.aire.insertOne(registro, {safe: true})
-                    .then(_ => actualizarAire(emitirEventoATodos))
-                    .then(() => notificar(`💨 Se ha ${registro.estado ? "encendido" : "apagado"} el aire acondicionado`));
-            })
-            .catch(err => mostrarError('Error al alternar el aire acondicionado', err));
+    function alternarActuador(coleccion, actualizador, prefijoNotificacion) {
+        estadoMasReciente(coleccion).then(query => {
+            const estado = query.estado || false;
+            const registro = {
+                fecha: new Date(),
+                estado: !estado
+            }
+            coleccion.insertOne(registro, {safe: true})
+                .then(_ => actualizador(emitirEventoATodos))
+                .then(() => notificar(`${prefijoNotificacion} ${registro.estado ? "activado" : "desactivado"}`));
+        })
+        .catch(err => mostrarError(`Error al alternar el ${prefijoNotificaciond}`, err));
     }
-
-    const alternarPersianas = () => {
-        estadoMasReciente(actuadores.persianas)
-            .then(query => {
-                const estado = query.estado || false;
-                var registro = {
-                    fecha: new Date(),
-                    estado: !estado
-                }
-                actuadores.persianas.insertOne(registro, {safe: true})
-                    .then(_ => notificar(`🪟 Se han ${registro.estado ? "cerrado" : "abierto"} las persianas`))
-                    .then(() => actualizarPersianas(emitirEventoATodos));
-            })
-            .catch(err => mostrarError('Error al alternar las persianas', err));
-    }
+    const alternarAire = () => alternarActuador(actuadores.aire, actualizarAire, '💨 Actuador de aire acondicionado');
+    const alternarPersianas = () => alternarActuador(actuadores.persianas, actualizarPersianas, '🪟 Actuador de persianas');
+    const alternarPurificador = () => alternarActuador(actuadores.purificador, actualizarPurificador, '⚗️ Actuador de purificador');
 
     io.sockets.on('connection', (client) => {
 
@@ -193,7 +221,7 @@ MongoClient.connect(process.env.MONGODB_SERVER).then((mongoClient) => {
         const actualizarSensoresEnCliente = () => actualizarSensores(emitirEventoACliente);
 
         const cambiarTemperatura = (valor) => {
-            var registro = {
+            const registro = {
                 fecha: new Date(),
                 estado: valor
             };
@@ -204,7 +232,7 @@ MongoClient.connect(process.env.MONGODB_SERVER).then((mongoClient) => {
                     estadoMasReciente(actuadores.aire)
                         .then((query) => {
                             const estado = query.estado || false;
-                            const { min, max } = limites.temperatura;
+                            const { min, max } = umbrales.temperatura;
                             if (estado && valor < min) {
                                 notificar(`🕵🏻 El agente ha detectado temperatura muy baja (${valor} ºC) mientras que el aire acondicionado estaba encendido`);
                                 alternarAire();
@@ -219,10 +247,9 @@ MongoClient.connect(process.env.MONGODB_SERVER).then((mongoClient) => {
         }
 
         const cambiarLuminosidad = (valor) => {
-            var registro = {
+            const registro = {
                 fecha: new Date(),
-                estado: valor,
-                autor: usuario
+                estado: valor
             };
             sensores.luminosidad.insertOne(registro, {safe: true})
                 .then(_ => actualizarLuminosidad(emitirEventoATodos))
@@ -231,14 +258,36 @@ MongoClient.connect(process.env.MONGODB_SERVER).then((mongoClient) => {
                     estadoMasReciente(actuadores.persianas)
                         .then((query) => {
                             const estado = query.estado || false;
-                            const limite = limites.luminosidad;
-                            if (!estado && valor > limite) {
+                            const umbral = umbrales.luminosidad;
+                            if (!estado && valor > umbral) {
                                 notificar(`🕵🏻 El agente ha detectado luminosidad excesiva (${valor}%) mientras que las persianas estaban abiertas`);
                                 alternarPersianas();
                             }
                         });
                 })
-                .catch(err => mostrarError('Error durante la evaluacion del agente sobre la luminosidad', err))
+                .catch(err => mostrarError('Error durante la evaluacion del agente sobre la luminosidad', err));
+        }
+
+        const cambiarPolen = (valor) => {
+            const registro = {
+                fecha: new Date(),
+                estado: valor
+            };
+            sensores.polen.insertOne(registro, {safe: true})
+                .then(_ => actualizarPolen(emitirEventoATodos))
+                .catch(err => mostrarError('Error al cambiar el polen del sistema', err))
+                .then(() => {
+                    estadoMasReciente(actuadores.purificador)
+                        .then((query) => {
+                            const estado = query.estado || false;
+                            const limite = umbrales.polen;
+                            if (!estado && valor > limite) {
+                                notificar(`🕵🏻 El agente ha detectado polen excesivo (${valor} gm3) mientras que el purificador estaba desactivado`);
+                                alternarPurificador();
+                            }
+                        });
+                })
+                .catch(err => mostrarError('Error durante la evaluacion del agente sobre el polen', err));
         }
 
         const desconectar = () => {
@@ -265,8 +314,10 @@ MongoClient.connect(process.env.MONGODB_SERVER).then((mongoClient) => {
         actualizarSensoresEnCliente();
         client.on('actualizar-temperatura', cambiarTemperatura);
         client.on('actualizar-luminosidad', cambiarLuminosidad);
+        client.on('actualizar-polen', cambiarPolen);
         client.on('alternar-aire', alternarAire);
         client.on('alternar-persianas', alternarPersianas);
+        client.on('alternar-purificador', alternarPurificador);
         client.on('disconnect', desconectar);
 
     });
@@ -277,6 +328,7 @@ MongoClient.connect(process.env.MONGODB_SERVER).then((mongoClient) => {
             fecha: new Date(),
             id: chatId
         };
+        ctx.react('👍');
         botChats.findOne({id: chatId})
             .then(result => {
                 if (result) {
@@ -293,13 +345,17 @@ MongoClient.connect(process.env.MONGODB_SERVER).then((mongoClient) => {
     bot.command('estado', async ctx => {
         const temperatura = await estadoMasReciente(sensores.temperatura);
         const luminosidad = await estadoMasReciente(sensores.luminosidad);
+        const polen = await estadoMasReciente(sensores.polen);
         const aire = await estadoMasReciente(actuadores.aire);
         const persianas = await estadoMasReciente(actuadores.persianas);
+        const purificador = await estadoMasReciente(actuadores.purificador);
         const lineas = [
             {nombre: "🌡️ Temperatura", valor: `${temperatura.estado} ºC`},
             {nombre: "🔅 Luminosidad", valor: `${luminosidad.estado} %`},
+            {nombre: "🐝 Polen", valor: `${polen.estado} gm3`},
             {nombre: "💨 Aire acondicionado", valor: (aire.estado ? "Encendido ✅" : "Apagado ❌")},
-            {nombre: "🪟 Persianas", valor: (persianas.estado ? "Cerradas ✅" : "Abiertas ❌")}
+            {nombre: "🪟 Persianas", valor: (persianas.estado ? "Cerradas ✅" : "Abiertas ❌")},
+            {nombre: "⚗️ Purificador", valor: (purificador.estado ? "Activado ✅" : "Desactivado ❌")}
         ];
         var msg = `🔍 <b>Estado: </b>\n`;
         lineas.forEach(linea => msg += `\n<b>${linea.nombre}:</b> ${linea.valor}`);
@@ -308,6 +364,7 @@ MongoClient.connect(process.env.MONGODB_SERVER).then((mongoClient) => {
 
     bot.command('aire', async ctx => alternarAire());
     bot.command('persianas', async ctx => alternarPersianas());
+    bot.command('purificador', async ctx => alternarPurificador());
 
     bot.command('help', ctx => {
         const lineas = [
@@ -315,7 +372,8 @@ MongoClient.connect(process.env.MONGODB_SERVER).then((mongoClient) => {
             {comando: 'help', descripcion: 'Muestra este mensaje'},
             {comando: 'estado', descripcion: 'Muestra el estado de los sensores y actuadores'},
             {comando: 'aire', descripcion: 'Enciende o apaga el aire acondicionado'},
-            {comando: 'persianas', descripcion: 'Abre o cierra las persianas'}
+            {comando: 'persianas', descripcion: 'Abre o cierra las persianas'},
+            {comando: 'purificador', descripcion: 'Activa o desactiva el purificador de aire'}
         ];
         var msg = `💻 <b>Comandos: </b>\n`;
         lineas.forEach(linea => msg += `\n<b>/${linea.comando}:</b> ${linea.descripcion}`);
